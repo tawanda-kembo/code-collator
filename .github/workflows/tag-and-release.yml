@@ -25,6 +25,7 @@ jobs:
         run: printenv
 
       - name: Bump version and push tag
+        id: bump_version
         env:
           DEFAULT_BUMP: minor
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
@@ -36,8 +37,8 @@ jobs:
         if: success()
         uses: actions/create-release@v1
         with:
-          tag_name: v${{ steps.bump_version.outputs.NEW_VERSION }}
-          release_name: Release v${{ steps.bump_version.outputs.NEW_VERSION }}
+          tag_name: ${{ steps.bump_version.outputs.NEW_VERSION }}
+          release_name: Release ${{ steps.bump_version.outputs.NEW_VERSION }}
           body: |
             See [CHANGELOG](https://github.com/tawanda-kembo/code-collator/blob/main/CHANGELOG.md) for details.
           draft: false

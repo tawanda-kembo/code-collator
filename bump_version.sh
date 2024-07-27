@@ -42,11 +42,16 @@ git config --global user.email "github-actions@github.com"
 # Set the remote URL with the GITHUB_TOKEN
 git remote set-url origin "https://${GITHUB_TOKEN}@github.com/tawanda-kembo/code-collator.git"
 
-# Create a new tag
-git tag "v$NEW_VERSION"
+# Check if the tag already exists
+if git rev-parse "v$NEW_VERSION" >/dev/null 2>&1; then
+    echo "Tag v$NEW_VERSION already exists. Skipping tag creation."
+else
+    # Create a new tag
+    git tag "v$NEW_VERSION"
 
-# Push the tag using the GITHUB_TOKEN
-git push origin "v$NEW_VERSION"
+    # Push the tag using the GITHUB_TOKEN
+    git push origin "v$NEW_VERSION"
+fi
 
 # Set the output variable for the new version
 echo "::set-output name=NEW_VERSION::v$NEW_VERSION"
