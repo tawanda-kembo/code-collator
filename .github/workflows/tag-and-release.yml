@@ -8,6 +8,8 @@ on:
 jobs:
   tag-and-release:
     runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.bump_version.outputs.NEW_VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -76,9 +78,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install build
       - name: Build package
+        env:
+          PACKAGE_VERSION: ${{ needs.tag-and-release.outputs.new_version }}
         run: python -m build
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@v1.9.0
-        # with:
-        #   user: ${{ secrets.PYPI_PASSWORD }}
-        #   password: ${{ secrets.PYPI_PASSWORD }}
