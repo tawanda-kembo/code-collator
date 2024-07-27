@@ -39,6 +39,10 @@ NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 git config --global user.name "github-actions"
 git config --global user.email "github-actions@github.com"
 
+# Debug information
+echo "Setting remote URL with PAT_TOKEN"
+echo "PAT_TOKEN: $PAT_TOKEN"
+
 # Set the remote URL with the PAT
 git remote set-url origin https://${PAT_TOKEN}@github.com/tawanda-kembo/code-collator.git
 
