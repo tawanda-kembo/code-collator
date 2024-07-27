@@ -1,11 +1,6 @@
 #!/bin/bash
 set -e
 
-echo "Token length: ${#GITHUB_TOKEN}"
-echo "Remote URL before: $(git remote get-url origin)"
-git remote set-url origin "https://${GITHUB_TOKEN}@github.com/tawanda-kembo/code-collator.git"
-echo "Remote URL after: $(git remote get-url origin)"
-
 # Default bump type
 DEFAULT_BUMP=${DEFAULT_BUMP:-minor}
 
@@ -52,3 +47,6 @@ git tag "v$NEW_VERSION"
 
 # Push the tag using the GITHUB_TOKEN
 git push origin "v$NEW_VERSION"
+
+# Set the output variable for the new version
+echo "::set-output name=NEW_VERSION::v$NEW_VERSION"
