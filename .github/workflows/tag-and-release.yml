@@ -48,6 +48,6 @@ jobs:
             For full details, see [CHANGELOG](https://github.com/tawanda-kembo/code-collator/blob/main/CHANGELOG.md).
           draft: false
           prerelease: false
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           replacesArtifacts: false
           bodyFile: "CHANGELOG.md"
