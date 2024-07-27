@@ -1,17 +1,25 @@
 from setuptools import setup, find_packages
 import pathlib
+import subprocess
 
 here = pathlib.Path(__file__).parent.resolve()
 
+def get_version():
+    try:
+        version = subprocess.check_output(['git', 'describe', '--tags']).decode().strip()
+        return version.lstrip('v')
+    except:
+        return '0.0.0'
+
 setup(
     name="code-collator",
-    version="0.1",
+    version=get_version(),
     description="A CLI tool to aggregate codebase into a single Markdown file",
     long_description=(here / 'README.md').read_text(encoding='utf-8'),
     long_description_content_type='text/markdown',
     url="https://github.com/tawanda-kembo/code-collator",
     author="Tawanda Kembo",
-    author_email="tkembo@gmail.com",
+    author_email="tawanda@mrkembo.com",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
