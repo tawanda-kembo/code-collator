@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-# Fetch all tags
+# Get the current version
 git fetch --tags
+CURRENT_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "0.0.0")
 
 # Default bump type
 DEFAULT_BUMP=${DEFAULT_BUMP:-minor}
@@ -64,8 +65,3 @@ fi
 
 # Set the output variable for the new version
 echo "::set-output name=NEW_VERSION::v$NEW_VERSION"
-
-# Commit the version bump
-git add setup.py
-git commit -m "Bump version to $NEW_VERSION"
-git push origin main

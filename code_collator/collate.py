@@ -60,22 +60,29 @@ def collate_codebase(path, output_file):
                         logging.info(f"Ignored file {file_path}")
                         continue
                     
-                    output.write(f"## {file_path}\n\n")
-                    if is_binary_file(file_path):
-                        output.write(f"**Note**: This is a binary file.\n\n")
-                    elif file.endswith('.svg'):
-                        output.write(f"**Note**: This is an SVG file.\n\n")
-                    else:
-                        try:
-                            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-                                content = f.read()
-                                output.write(f"```\n{content}\n```\n\n")
-                        except Exception as e:
-                            logging.error(f"Error reading file {file_path}: {e}")
-                            output.write(f"**Note**: Error reading this file.\n\n")
+                    try:
+                        write_file_content(file_path, output)
+                    except Exception as e:
+                        logging.error(f"Error processing file {file_path}: {e}")
         logging.info(f"Collated codebase written to {output_file}")
-    except Exception as e:
+    except IOError as e:
         logging.error(f"Error writing to output file {output_file}: {e}")
+        raise
+
+def write_file_content(file_path, output):
+    output.write(f"## {file_path}\n\n")
+    if is_binary_file(file_path):
+        output.write(f"**Note**: This is a binary file.\n\n")
+    elif file_path.endswith('.svg'):
+        output.write(f"**Note**: This is an SVG file.\n\n")
+    else:
+        try:
+            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+                output.write(f"```\n{content}\n```\n\n")
+        except Exception as e:
+            logging.error(f"Error reading file {file_path}: {e}")
+            output.write(f"**Note**: Error reading this file.\n\n")
 
 def main():
     """Parse arguments and initiate codebase collation."""
