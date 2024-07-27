@@ -1,8 +1,9 @@
 # Changelog
 
-## v0.12.0
+## v0.13.0
 
-* Update CHANGELOG.md for v0.11.0
-* ci: improve versioning and PyPI deployment process
-* Merge pull request #25 from tawanda-kembo/ci/streamline-release-process
+* Update CHANGELOG.md for v0.12.0
+* chore: update .gitignore and remove build artifacts from tracking
+* fix: use exception variable in error logging
+* Merge pull request #26 from tawanda-kembo/ci/streamline-release-process
 
