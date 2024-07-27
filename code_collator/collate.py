@@ -12,6 +12,7 @@ def setup_logging():
         force=True
     )
 
+
 def is_binary_file(filepath):
     """Check if a file is binary."""
     try:
@@ -21,6 +22,7 @@ def is_binary_file(filepath):
     except Exception as e:
         logging.error("Error reading file %s: %s", filepath, e)
         return False
+
 
 def read_gitignore(path):
     """Read the .gitignore file and return patterns to ignore."""
@@ -45,6 +47,7 @@ def should_ignore(file_path, ignore_patterns):
         return True
     return any(fnmatch(file_path, pattern) for pattern in ignore_patterns)
 
+
 def collate_codebase(path, output_file):
     """Aggregate the codebase into a single Markdown file."""
     ignore_patterns = read_gitignore(path)
@@ -57,7 +60,7 @@ def collate_codebase(path, output_file):
                     if should_ignore(file_path, ignore_patterns):
                         logging.info("Ignored file %s", file_path)
                         continue
-                    
+
                     output.write(f"## {file_path}\n\n")
                     is_binary = is_binary_file(file_path)
                     logging.info("File %s is binary: %s", file_path, is_binary)
@@ -76,19 +79,27 @@ def collate_codebase(path, output_file):
         logging.info("Collated codebase written to %s", output_file)
     except Exception as e:
         logging.error("Error writing to output file %s: %s", output_file, e)
-        
+
+
 def main():
     """Parse arguments and initiate codebase collation."""
     setup_logging()
     parser = argparse.ArgumentParser(description="Aggregate codebase into a single Markdown file.")
-    parser.add_argument('-p', '--path', type=str, default='.', help="Specify the path to the codebase directory (default: current directory)")
-    parser.add_argument('-o', '--output', type=str, default='collated-code.md', help="Specify output file (default: collated-code.md)")
-    
+    parser.add_argument(
+        '-p',
+        '--path',
+        type=str,
+        default='.',
+        help="Specify the path to the codebase directory (default: current directory)")
+    parser.add_argument('-o', '--output', type=str, default='collated-code.md',
+                        help="Specify output file (default: collated-code.md)")
+
     args = parser.parse_args()
-    
+
     logging.info("Starting code collation for directory: %s", args.path)
     collate_codebase(args.path, args.output)
     logging.info("Code collation completed.")
+
 
 if __name__ == "__main__":
     main()

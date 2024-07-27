@@ -1,15 +1,12 @@
 from setuptools import setup, find_packages
 import pathlib
-import subprocess
+import os
 
 here = pathlib.Path(__file__).parent.resolve()
 
 def get_version():
-    try:
-        version = subprocess.check_output(['git', 'describe', '--tags', '--always']).decode().strip()
-        return version.lstrip('v')
-    except subprocess.CalledProcessError:
-        return '0.0.0'
+    version = os.environ.get('PACKAGE_VERSION', '0.0.0')
+    return version
 
 setup(
     name="code-collator",
