@@ -18,6 +18,12 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
+      - name: Print Git Config
+        run: git config --list
+
+      - name: Print Environment Variables
+        run: printenv
+
       - name: Bump version and push tag
         env:
           DEFAULT_BUMP: minor
