@@ -64,3 +64,8 @@ fi
 
 # Set the output variable for the new version
 echo "::set-output name=NEW_VERSION::v$NEW_VERSION"
+
+# Commit the version bump
+git add setup.py
+git commit -m "Bump version to $NEW_VERSION"
+git push origin main
