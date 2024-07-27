@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-echo "Token length: ${#PAT_TOKEN}"
+echo "Token length: ${#GITHUB_TOKEN}"
 echo "Remote URL before: $(git remote get-url origin)"
-git remote set-url origin "https://${PAT_TOKEN}@github.com/tawanda-kembo/code-collator.git"
+git remote set-url origin "https://${GITHUB_TOKEN}@github.com/tawanda-kembo/code-collator.git"
 echo "Remote URL after: $(git remote get-url origin)"
 
 # Default bump type
