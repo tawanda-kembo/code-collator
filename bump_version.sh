@@ -38,6 +38,8 @@ NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 # Configure git to use the PAT
 git config --global user.name "github-actions"
 git config --global user.email "github-actions@github.com"
+
+# Set the remote URL with the PAT
 git remote set-url origin https://${PAT_TOKEN}@github.com/tawanda-kembo/code-collator.git
 
 # Create a new tag

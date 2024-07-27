@@ -28,8 +28,8 @@ jobs:
         if: success()
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ steps.tag.outputs.new_tag }}
+          release_name: Release ${{ steps.tag.outputs.new_tag }}
           body: |
             See [CHANGELOG](https://github.com/tawanda-kembo/code-collator/blob/main/CHANGELOG.md) for details.
           draft: false
