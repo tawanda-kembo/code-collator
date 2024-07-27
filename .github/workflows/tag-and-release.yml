@@ -61,6 +61,8 @@ jobs:
   publish-to-pypi:
     needs: tag-and-release
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v3
         with:
@@ -77,6 +79,6 @@ jobs:
         run: python -m build
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@v1.9.0
-        with:
-          user: ${{ secrets.PYPI_PASSWORD }}
-          password: ${{ secrets.PYPI_PASSWORD }}
+        # with:
+        #   user: ${{ secrets.PYPI_PASSWORD }}
+        #   password: ${{ secrets.PYPI_PASSWORD }}
