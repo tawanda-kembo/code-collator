@@ -36,7 +36,7 @@ def read_gitignore(path):
         logging.info("Loaded .gitignore patterns from {gitignore_path}")
         return patterns
     except Exception as e:
-        logging.error("Error reading .gitignore file {gitignore_path}: {e}")
+        logging.error(f"Error reading .gitignore file {gitignore_path}: {e}")
         return []
 
 
