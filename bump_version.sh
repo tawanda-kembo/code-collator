@@ -41,6 +41,9 @@ esac
 
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
+# Update version in setup.py
+sed -i "s/version=\".*\"/version=\"$NEW_VERSION\"/" setup.py
+
 # Configure git to use the GITHUB_TOKEN
 git config --global user.name "github-actions"
 git config --global user.email "github-actions@github.com"
