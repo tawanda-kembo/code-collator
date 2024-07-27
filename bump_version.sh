@@ -46,10 +46,4 @@ git remote set-url origin "https://${GITHUB_TOKEN}@github.com/tawanda-kembo/code
 git tag "v$NEW_VERSION"
 
 # Push the tag using the GITHUB_TOKEN
-GIT_ASKPASS=$(mktemp)
-echo "echo \$GITHUB_TOKEN" > $GIT_ASKPASS
-chmod +x $GIT_ASKPASS
-GIT_ASKPASS=$GIT_ASKPASS git push origin "v$NEW_VERSION"
-
-# Clean up
-rm $GIT_ASKPASS
+git push origin "v$NEW_VERSION"
