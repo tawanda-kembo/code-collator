@@ -54,7 +54,7 @@ GIT_ASKPASS=$(mktemp)
 echo "echo \$PAT_TOKEN" > $GIT_ASKPASS
 chmod +x $GIT_ASKPASS
 
-GIT_HTTP_USER_AGENT="git/2.29.0" GIT_ASKPASS=$GIT_ASKPASS git push origin "v$NEW_VERSION"
+GIT_ASKPASS=$GIT_ASKPASS git push origin "v$NEW_VERSION"
 
 # Clean up
 rm $GIT_ASKPASS
