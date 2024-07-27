@@ -35,25 +35,20 @@ esac
 
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
-# Configure git to use the PAT
+# Configure git to use the GITHUB_TOKEN
 git config --global user.name "github-actions"
 git config --global user.email "github-actions@github.com"
 
-# Debug information
-echo "Setting remote URL with PAT_TOKEN"
-echo "PAT_TOKEN: ${#PAT_TOKEN}"
-
-# Set the remote URL with the PAT
-git remote set-url origin "https://${PAT_TOKEN}@github.com/tawanda-kembo/code-collator.git"
+# Set the remote URL with the GITHUB_TOKEN
+git remote set-url origin "https://${GITHUB_TOKEN}@github.com/tawanda-kembo/code-collator.git"
 
 # Create a new tag
 git tag "v$NEW_VERSION"
 
-# Push the tag using the PAT
+# Push the tag using the GITHUB_TOKEN
 GIT_ASKPASS=$(mktemp)
-echo "echo \$PAT_TOKEN" > $GIT_ASKPASS
+echo "echo \$GITHUB_TOKEN" > $GIT_ASKPASS
 chmod +x $GIT_ASKPASS
-
 GIT_ASKPASS=$GIT_ASKPASS git push origin "v$NEW_VERSION"
 
 # Clean up
