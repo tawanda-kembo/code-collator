@@ -128,3 +128,15 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Pytest cache
+.pytest_cache/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Distribution / packaging
+*.egg-info/
+build/
+dist/
