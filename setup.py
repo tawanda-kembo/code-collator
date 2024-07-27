@@ -6,9 +6,9 @@ here = pathlib.Path(__file__).parent.resolve()
 
 def get_version():
     try:
-        version = subprocess.check_output(['git', 'describe', '--tags']).decode().strip()
+        version = subprocess.check_output(['git', 'describe', '--tags', '--always']).decode().strip()
         return version.lstrip('v')
-    except:
+    except subprocess.CalledProcessError:
         return '0.0.0'
 
 setup(
