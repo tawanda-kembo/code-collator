@@ -14,13 +14,10 @@ def is_binary_file(filepath):
     """Check if a file is binary."""
     try:
         with open(filepath, 'rb') as f:
-            for byte in f.read():
-                if byte > 127:
-                    return True
+            return b'\0' in f.read(1024)
     except Exception as e:
         logging.error(f"Error reading file {filepath}: {e}")
         return False
-    return False
 
 def read_gitignore(path):
     """Read the .gitignore file and return patterns to ignore."""
@@ -42,10 +39,7 @@ def should_ignore(file_path, ignore_patterns):
     from fnmatch import fnmatch
     if '.git' in Path(file_path).parts:
         return True
-    for pattern in ignore_patterns:
-        if fnmatch(file_path, pattern):
-            return True
-    return False
+    return any(fnmatch(file_path, pattern) for pattern in ignore_patterns)
 
 def collate_codebase(path, output_file):
     """Aggregate the codebase into a single Markdown file."""
@@ -60,29 +54,22 @@ def collate_codebase(path, output_file):
                         logging.info(f"Ignored file {file_path}")
                         continue
                     
-                    try:
-                        write_file_content(file_path, output)
-                    except Exception as e:
-                        logging.error(f"Error processing file {file_path}: {e}")
+                    output.write(f"## {file_path}\n\n")
+                    if is_binary_file(file_path):
+                        output.write(f"**Note**: This is a binary file.\n\n")
+                    elif file.endswith('.svg'):
+                        output.write(f"**Note**: This is an SVG file.\n\n")
+                    else:
+                        try:
+                            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                                content = f.read()
+                                output.write(f"```\n{content}\n```\n\n")
+                        except Exception as e:
+                            logging.error(f"Error reading file {file_path}: {e}")
+                            output.write(f"**Note**: Error reading this file.\n\n")
         logging.info(f"Collated codebase written to {output_file}")
-    except IOError as e:
+    except Exception as e:
         logging.error(f"Error writing to output file {output_file}: {e}")
-        raise
-
-def write_file_content(file_path, output):
-    output.write(f"## {file_path}\n\n")
-    if is_binary_file(file_path):
-        output.write(f"**Note**: This is a binary file.\n\n")
-    elif file_path.endswith('.svg'):
-        output.write(f"**Note**: This is an SVG file.\n\n")
-    else:
-        try:
-            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-                content = f.read()
-                output.write(f"```\n{content}\n```\n\n")
-        except Exception as e:
-            logging.error(f"Error reading file {file_path}: {e}")
-            output.write(f"**Note**: Error reading this file.\n\n")
 
 def main():
     """Parse arguments and initiate codebase collation."""
