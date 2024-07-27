@@ -38,3 +38,52 @@ For more detailed usage instructions, use the help command:
 code-collator --help
 ```
 
+
+
+## Running Tests
+
+To run the tests locally:
+
+```sh
+pytest tests/
+```
+
+To run tests with coverage:
+
+```sh
+pytest tests/ --cov=code_collator --cov-report=term-missing
+```
+
+## Linting
+
+To run the linter:
+
+```sh
+flake8 code_collator/ tests/
+```
+
+Automatically fix many style issues:
+
+```sh
+autopep8 --in-place --aggressive --aggressive -r code_collator/ tests/
+```
+
+To check for linting issues:
+
+```bash
+python setup.py lint
+```
+
+To automatically fix many linting issues:
+
+```sh
+python setup.py lint --fix
+```
+
+## Contributing
+
+Please see CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
