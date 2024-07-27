@@ -29,9 +29,7 @@ jobs:
         env:
           DEFAULT_BUMP: minor
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          echo "Token length: ${#GITHUB_TOKEN}"
-          ./bump_version.sh
+        run: ./bump_version.sh
 
       - name: Create Release
         if: success()

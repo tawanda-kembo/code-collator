@@ -1,11 +1,17 @@
 #!/bin/bash
 set -e
 
+# Fetch all tags
+git fetch --tags
+
 # Default bump type
 DEFAULT_BUMP=${DEFAULT_BUMP:-minor}
 
 # Get the current version
 CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+
+# Remove the 'v' prefix if it exists
+CURRENT_VERSION=${CURRENT_VERSION#v}
 
 # Split the version into parts
 IFS='.' read -r -a VERSION_PARTS <<< "$CURRENT_VERSION"
