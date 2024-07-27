@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+echo "Token length: ${#PAT_TOKEN}"
+echo "Remote URL before: $(git remote get-url origin)"
+git remote set-url origin "https://${PAT_TOKEN}@github.com/tawanda-kembo/code-collator.git"
+echo "Remote URL after: $(git remote get-url origin)"
+
 # Default bump type
 DEFAULT_BUMP=${DEFAULT_BUMP:-minor}
 
