@@ -1,4 +1,4 @@
-name: Tag and Release
+name: Tag, Release, and Publish
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch all history for all tags and branches
+          fetch-depth: 0
 
       - name: Set up Git
         run: |
@@ -36,18 +36,45 @@ jobs:
           echo "$NOTES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Update CHANGELOG.md
+        run: |
+          echo "# Changelog" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "## ${{ steps.bump_version.outputs.NEW_VERSION }}" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "${{ steps.generate_notes.outputs.RELEASE_NOTES }}" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          git add CHANGELOG.md
+          git commit -m "Update CHANGELOG.md for ${{ steps.bump_version.outputs.NEW_VERSION }}"
+          git push
+
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.bump_version.outputs.NEW_VERSION }}
           name: Release ${{ steps.bump_version.outputs.NEW_VERSION }}
-          body: |
-            Changes in this Release:
-            ${{ steps.generate_notes.outputs.RELEASE_NOTES }}
-
-            For full details, see [CHANGELOG](https://github.com/tawanda-kembo/code-collator/blob/main/CHANGELOG.md).
+          body: ${{ steps.generate_notes.outputs.RELEASE_NOTES }}
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
-          replacesArtifacts: false
-          bodyFile: "CHANGELOG.md"
+
+  publish-to-pypi:
+    needs: tag-and-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+      - name: Build package
+        run: python -m build
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
