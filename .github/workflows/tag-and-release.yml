@@ -6,40 +6,47 @@ on:
       - main
 
 jobs:
-  tag:
+  tag-and-release:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for all tags and branches
 
       - name: Set up Git
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
-      - name: Print Git Config
-        run: git config --list
-
-      - name: Print Environment Variables
-        run: printenv
-
       - name: Bump version and push tag
         id: bump_version
         env:
-          DEFAULT_BUMP: minor
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: ./bump_version.sh
+        run: |
+          ./bump_version.sh
+          echo "NEW_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+
+      - name: Generate Release Notes
+        id: generate_notes
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 --always HEAD^)
+          NOTES=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"* %s" --reverse)
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        if: success()
-        uses: actions/create-release@v1.1.4
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ steps.bump_version.outputs.NEW_VERSION }}
-          release_name: Release ${{ steps.bump_version.outputs.NEW_VERSION }}
+          tag: ${{ steps.bump_version.outputs.NEW_VERSION }}
+          name: Release ${{ steps.bump_version.outputs.NEW_VERSION }}
           body: |
-            See [CHANGELOG](https://github.com/tawanda-kembo/code-collator/blob/main/CHANGELOG.md) for details.
+            Changes in this Release:
+            ${{ steps.generate_notes.outputs.RELEASE_NOTES }}
+
+            For full details, see [CHANGELOG](https://github.com/tawanda-kembo/code-collator/blob/main/CHANGELOG.md).
           draft: false
           prerelease: false
+          token: ${{ secrets.PAT_TOKEN }}
