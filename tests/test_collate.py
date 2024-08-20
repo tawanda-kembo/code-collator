@@ -9,9 +9,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from code_collator.collate import is_binary_file, read_gitignore, should_ignore, main
 
-# Add the parent directory to sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 
 def test_is_binary_file():
     with patch('builtins.open', mock_open(read_data=b'\x00binary\xff')):
