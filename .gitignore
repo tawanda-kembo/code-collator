@@ -141,3 +141,4 @@ __pycache__/
 build/
 dist/
 .aider*
+.aider.*
