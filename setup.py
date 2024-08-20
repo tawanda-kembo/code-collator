@@ -4,9 +4,11 @@ import os
 
 here = pathlib.Path(__file__).parent.resolve()
 
+
 def get_version():
     version = os.environ.get('PACKAGE_VERSION', '0.0.0')
     return version
+
 
 setup(
     name="code-collator",
