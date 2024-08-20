@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import mock_open, patch
-from code_collator import collate
+from code_collator.collate import is_binary_file, read_gitignore, should_ignore, collate_codebase, main
 import logging
 
 
