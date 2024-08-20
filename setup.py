@@ -4,9 +4,11 @@ import os
 
 here = pathlib.Path(__file__).parent.resolve()
 
+
 def get_version():
     version = os.environ.get('PACKAGE_VERSION', '0.0.0')
     return version
+
 
 setup(
     name="code-collator",
@@ -29,7 +31,7 @@ setup(
         "Programming Language :: Python :: 3.11",
     ],
     keywords="cli, development, documentation",
-    packages=find_packages(),
+    packages=find_packages(include=['code_collator', 'code_collator.*']),
     python_requires=">=3.6, <4",
     install_requires=[
         # Add any dependencies here

@@ -140,3 +140,5 @@ __pycache__/
 *.egg-info/
 build/
 dist/
+.aider*
+.aider.*

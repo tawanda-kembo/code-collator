@@ -2,14 +2,14 @@ import os
 import argparse
 from pathlib import Path
 import logging
+from fnmatch import fnmatch
 
 
 def setup_logging():
     """Set up logging configuration."""
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        force=True
+        format='%(asctime)s - %(levelname)s - %(message)s'
     )
 
 
@@ -42,10 +42,27 @@ def read_gitignore(path):
 
 def should_ignore(file_path, ignore_patterns):
     """Check if a file should be ignored based on .gitignore patterns and if it's in the .git directory."""
-    from fnmatch import fnmatch
     if '.git' in Path(file_path).parts:
         return True
-    return any(fnmatch(file_path, pattern) for pattern in ignore_patterns)
+
+    relative_path = os.path.relpath(file_path)
+    path_parts = relative_path.split(os.sep)
+
+    for pattern in ignore_patterns:
+        if pattern.endswith('/'):
+            # Directory pattern
+            if any(fnmatch(part, pattern[:-1]) for part in path_parts):
+                return True
+        elif '/' in pattern:
+            # Path pattern
+            if fnmatch(relative_path, pattern):
+                return True
+        else:
+            # File pattern
+            if fnmatch(os.path.basename(file_path), pattern):
+                return True
+
+    return False
 
 
 def collate_codebase(path, output_file):
