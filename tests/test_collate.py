@@ -1,9 +1,14 @@
 import sys
 import os
+import sys
+import os
 import pytest
 import logging
 from unittest.mock import mock_open, patch
 from code_collator.collate import is_binary_file, read_gitignore, should_ignore, main
+
+# Add the parent directory to sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Add the parent directory to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
