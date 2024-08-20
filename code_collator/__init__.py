@@ -1,1 +1,1 @@
-from . import collate
+from . import collate  # noqa: F401
