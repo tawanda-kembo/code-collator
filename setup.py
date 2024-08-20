@@ -31,8 +31,7 @@ setup(
         "Programming Language :: Python :: 3.11",
     ],
     keywords="cli, development, documentation",
-    packages=find_packages(where='code_collator'),
-    package_dir={'': 'code_collator'},
+    packages=find_packages(exclude=['tests']),
     python_requires=">=3.6, <4",
     install_requires=[
         # Add any dependencies here
