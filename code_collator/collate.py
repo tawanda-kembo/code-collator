@@ -45,10 +45,10 @@ def should_ignore(file_path, ignore_patterns):
     """Check if a file should be ignored based on .gitignore patterns and if it's in the .git directory."""
     if '.git' in Path(file_path).parts:
         return True
-    
+
     relative_path = os.path.relpath(file_path)
     path_parts = relative_path.split(os.sep)
-    
+
     for pattern in ignore_patterns:
         if pattern.endswith('/'):
             # Directory pattern
@@ -62,7 +62,7 @@ def should_ignore(file_path, ignore_patterns):
             # File pattern
             if fnmatch(os.path.basename(file_path), pattern):
                 return True
-    
+
     return False
 
 
