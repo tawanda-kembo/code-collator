@@ -14,6 +14,7 @@ Have you ever needed to provide a comprehensive overview of your codebase for a 
 - **.gitignore Support**: Automatically ignores files specified in the `.gitignore` file if one exists.
 - **Customizable Output**: Outputs a single Markdown file named `collated-code.md` by default, with options to specify the path to the codebase directory and output file name.
 - **Binary File Inclusion**: Includes binary files such as images in the output with a note about their file type.
+- **Comment Exclusion Option**: Allows users to exclude comments and docstrings from the collated code.
 - **Help Command**: Provides a help command to display usage instructions.
 
 ## Installation
@@ -36,6 +37,12 @@ For more detailed usage instructions, use the help command:
 
 ```sh
 code-collator --help
+```
+
+To exclude comments and docstrings from the collated code:
+
+```sh
+code-collator --path /path/to/codebase --output my-collated-code.md --comments off
 ```
 
 
