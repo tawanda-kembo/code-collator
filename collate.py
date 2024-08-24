@@ -1,3 +1,7 @@
+from pygments import lexers, token
+from pygments.util import ClassNotFound
+import logging
+
 def process_file_content(content, file_path, include_comments):
     """Process file content, optionally removing comments and docstrings."""
     if include_comments:
