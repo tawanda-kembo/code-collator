@@ -91,7 +91,12 @@ def process_file_content(content, file_path, include_comments):
         if not in_multiline_comment:
             processed_tokens.append((token_type, value))
 
-    return ''.join(value for _, value in processed_tokens).strip()
+    processed_content = ''.join(value for _, value in processed_tokens).strip()
+    
+    # Remove any remaining single-line comments
+    processed_content = '\n'.join(line for line in processed_content.split('\n') if not line.strip().startswith('#'))
+    
+    return processed_content
 
 
 def collate_codebase(path, output_file, include_comments=True):
