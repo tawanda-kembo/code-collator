@@ -54,7 +54,6 @@ def hello():
     assert 'print("Hello, World!")' in processed
 
 
-
 @pytest.fixture
 def mock_file_system(tmp_path):
     d = tmp_path / "test_dir"
@@ -85,7 +84,6 @@ def test_collate_codebase(mock_file_system, caplog):
     assert "test.py" in content
     assert "print('hello')" in content
     assert "# This is a comment" not in content
-
 
 
 def test_main(mock_file_system, caplog, capsys):
