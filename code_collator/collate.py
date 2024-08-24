@@ -84,16 +84,14 @@ def process_file_content(content, file_path, include_comments):
     in_multiline_comment = False
 
     for token_type, value in tokens:
-        if token_type in token.Comment:
+        if token_type in token.Comment or token_type == token.String.Doc:
             if token_type == token.Comment.Multiline:
                 in_multiline_comment = not in_multiline_comment
-            continue
-        if token_type == token.String.Doc:
             continue
         if not in_multiline_comment:
             processed_tokens.append((token_type, value))
 
-    return ''.join(value for _, value in processed_tokens)
+    return ''.join(value for _, value in processed_tokens).strip()
 
 
 def collate_codebase(path, output_file, include_comments=True):
