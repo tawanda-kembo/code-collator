@@ -3,6 +3,8 @@ import argparse
 from pathlib import Path
 import logging
 from fnmatch import fnmatch
+from pygments import lexers, token
+from pygments.util import ClassNotFound
 
 
 def setup_logging():
@@ -34,7 +36,7 @@ def read_gitignore(path):
     try:
         with open(gitignore_path, 'r') as f:
             patterns = f.read().splitlines()
-        logging.info("Loaded .gitignore patterns from {gitignore_path}")
+        logging.info(f"Loaded .gitignore patterns from {gitignore_path}")
         return patterns
     except Exception as e:
         logging.error(f"Error reading .gitignore file {gitignore_path}: {e}")
@@ -64,6 +66,26 @@ def should_ignore(file_path, ignore_patterns):
                 return True
 
     return False
+
+
+def process_file_content(content, file_path, include_comments):
+    """Process file content, optionally removing comments and docstrings."""
+    if include_comments:
+        return content
+
+    try:
+        lexer = lexers.get_lexer_for_filename(file_path)
+    except ClassNotFound:
+        logging.warning(f"No lexer found for {file_path}. Returning original content.")
+        return content
+
+    tokens = list(lexer.get_tokens(content))
+    processed_tokens = [
+        (token_type, value) for token_type, value in tokens
+        if token_type not in (token.Comment, token.Comment.Single, token.Comment.Multiline, token.String.Doc)
+    ]
+
+    return ''.join(value for _, value in processed_tokens)
 
 
 def collate_codebase(path, output_file, include_comments=True):
@@ -124,24 +146,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-from pygments import lexers, token
-from pygments.util import ClassNotFound
-
-def process_file_content(content, file_path, include_comments):
-    """Process file content, optionally removing comments and docstrings."""
-    if include_comments:
-        return content
-
-    try:
-        lexer = lexers.get_lexer_for_filename(file_path)
-    except ClassNotFound:
-        logging.warning(f"No lexer found for {file_path}. Returning original content.")
-        return content
-
-    tokens = list(lexer.get_tokens(content))
-    processed_tokens = [
-        (token_type, value) for token_type, value in tokens
-        if token_type not in (token.Comment, token.Comment.Single, token.Comment.Multiline, token.String.Doc)
-    ]
-
-    return ''.join(value for _, value in processed_tokens)
