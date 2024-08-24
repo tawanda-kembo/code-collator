@@ -1,25 +1,32 @@
 # Changelog
 
-## v0.14.0
+## v0.15.0
 
-* Update CHANGELOG.md for v0.13.0
-* fix: Improve .gitignore handling and add support for directory patterns
-* fix: Resolve ModuleNotFoundError by including code_collator package in setup.py and adding __init__.py file
-* feat: Add package version retrieval from environment
-* fix: Update package structure and installation
-* fix: Remove unused import and fix whitespace issues
-* fix: Remove whitespace from blank lines in code_collator/collate.py
-* fix: Resolve ModuleNotFoundError in tests
-* fix: Update package setup and imports
-* fix: Update tests to use imported functions directly
-* fix: Add parent directory to sys.path in test_collate.py
-* fix: Move imports to the top of the file in tests/test_collate.py
-* fix: Move imports to the top of the file in tests/test_collate.py
+* Update CHANGELOG.md for v0.14.0
+* feat: Add option to exclude comments and docstrings from collated code
+* feat: Add support for including/excluding comments and docstrings in code collation
+* fix: Add missing imports and definitions to resolve flake8 errors
+* feat: integrate collate.py functionality into code_collator/collate.py
+* test: Add logging and stderr capture to test_main
+* feat: Add comprehensive tests for Code Collator features
+* fix: Resolve flake8 errors in tests/test_collate.py
+* fix: Remove extra blank lines in tests/test_collate.py
+* fix: Remove unused collate.py and output.md files
+* fix: Improve import structure in test file
+* fix: Rearrange imports to resolve flake8 errors
+* fix: Rearrange imports to resolve flake8 E402 errors
+* fix: Add comment to test file and use correct output file path in test_main
+* fix: Update test_main function to use correct output file path
+* fix: Improve comment handling in process_file_content function
+* fix: Remove comments and docstrings from processed file content
+* fix: Properly remove comments and docstrings when include_comments is False
+* fix: Remove comments from output when include_comments is set to False
+* fix: Update logging configuration to write to stdout instead of stderr
+* fix: Remove single-line comments from processed content
 * fix: Add parent directory to Python path in test file
+* test: Reorder imports and add missing imports
 * fix: Add parent directory to Python path in tests/test_collate.py
-* fix: Update .gitignore to include additional file pattern
-* fix: Remove duplicate imports and fix formatting in tests/test_collate.py
-* fix: Add parent directory to Python path in tests/test_collate.py
-* fix: Remove duplicate import statements in tests/test_collate.py
-* Merge pull request #27 from tawanda-kembo/feat/improve-ignore-rules
+* chore: Add E402 to flake8 ignore list
+* chore: Remove unused files
+* Merge pull request #28 from tawanda-kembo/feat/toggle-include-comments
 
