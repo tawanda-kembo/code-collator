@@ -84,7 +84,7 @@ def process_file_content(content, file_path, include_comments):
     in_multiline_comment = False
 
     for token_type, value in tokens:
-        if token_type in token.Comment or token_type == token.String.Doc:
+        if token_type in token.Comment or token_type in token.String.Doc:
             if token_type == token.Comment.Multiline:
                 in_multiline_comment = not in_multiline_comment
             continue
