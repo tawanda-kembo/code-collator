@@ -1,4 +1,5 @@
 import os
+import sys
 import argparse
 from pathlib import Path
 import logging
@@ -9,11 +10,11 @@ from pygments.util import ClassNotFound
 
 def setup_logging():
     """Set up logging configuration."""
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        force=True
-    )
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
 
 
 def is_binary_file(filepath):
