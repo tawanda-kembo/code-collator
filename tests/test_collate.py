@@ -1,13 +1,12 @@
+from code_collator import collate
+from unittest.mock import mock_open, patch
+import logging
+import pytest
 import sys
 import os
 
 # Add the parent directory to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-import pytest
-import logging
-from unittest.mock import mock_open, patch
-from code_collator import collate
 
 
 def test_is_binary_file():

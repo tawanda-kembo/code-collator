@@ -93,10 +93,10 @@ def process_file_content(content, file_path, include_comments):
             processed_tokens.append((token_type, value))
 
     processed_content = ''.join(value for _, value in processed_tokens).strip()
-    
+
     # Remove any remaining single-line comments
     processed_content = '\n'.join(line for line in processed_content.split('\n') if not line.strip().startswith('#'))
-    
+
     return processed_content
 
 
