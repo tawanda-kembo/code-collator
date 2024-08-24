@@ -56,7 +56,7 @@ def hello():
 def mock_file_system(tmp_path):
     d = tmp_path / "test_dir"
     d.mkdir()
-    (d / "test.py").write_text("print('hello')")
+    (d / "test.py").write_text("# This is a comment\nprint('hello')")
     (d / "test.pyc").write_bytes(b'\x00\x01\x02')
     return d
 
@@ -88,10 +88,11 @@ def test_main(mock_file_system, caplog, capsys):
     caplog.set_level(logging.INFO)
 
     # Test with comments included
-    with patch('sys.argv', ['collate', '-p', str(mock_file_system), '-o', 'output_with_comments.md', '-c', 'on']):
+    output_with_comments = mock_file_system / 'output_with_comments.md'
+    with patch('sys.argv', ['collate', '-p', str(mock_file_system), '-o', str(output_with_comments), '-c', 'on']):
         collate.main()
 
-    with open(mock_file_system / 'output_with_comments.md', 'r') as f:
+    with open(output_with_comments, 'r') as f:
         content = f.read()
     assert "# This is a comment" in content
 
