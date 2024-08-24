@@ -59,10 +59,25 @@ def mock_file_system(tmp_path):
 #     assert "test.pyc" in content
 #     assert "This is a binary file" in content
 
-def test_main(mock_file_system, caplog):
+
+def test_main(mock_file_system, caplog, capsys):
     caplog.set_level(logging.INFO)
     with patch('sys.argv', ['collate', '-p', str(mock_file_system), '-o', 'output.md']):
         main()
 
-    assert "Starting code collation" in caplog.text
-    assert "Code collation completed" in caplog.text
+    # Capture both logs and stderr
+    captured = capsys.readouterr()
+    all_output = caplog.text + captured.err
+
+    # Print captured output for debugging
+    print("Captured output:")
+    print(all_output)
+
+    # Assert log messages
+    assert "Starting code collation for directory:" in all_output
+    assert "Code collation completed." in all_output
+
+    # You can add more specific assertions here if needed
+    # For example, check if specific files were processed:
+    assert f"File {mock_file_system}/test.py is binary: False" in all_output
+    assert f"File {mock_file_system}/test.pyc is binary: True" in all_output
