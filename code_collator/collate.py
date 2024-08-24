@@ -3,13 +3,16 @@ import argparse
 from pathlib import Path
 import logging
 from fnmatch import fnmatch
+from pygments import lexers, token
+from pygments.util import ClassNotFound
 
 
 def setup_logging():
     """Set up logging configuration."""
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        force=True
     )
 
 
@@ -65,7 +68,7 @@ def should_ignore(file_path, ignore_patterns):
     return False
 
 
-def collate_codebase(path, output_file):
+def collate_codebase(path, output_file, include_comments=True):
     """Aggregate the codebase into a single Markdown file."""
     ignore_patterns = read_gitignore(path)
     try:
@@ -89,7 +92,8 @@ def collate_codebase(path, output_file):
                         try:
                             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                                 content = f.read()
-                                output.write(f"```\n{content}\n```\n\n")
+                                processed_content = process_file_content(content, file_path, include_comments)
+                                output.write(f"```\n{processed_content}\n```\n\n")
                         except Exception as e:
                             logging.error("Error reading file %s: %s", file_path, e)
                             output.write("**Note**: Error reading this file.\n\n")
@@ -100,7 +104,6 @@ def collate_codebase(path, output_file):
 
 def main():
     """Parse arguments and initiate codebase collation."""
-    setup_logging()
     parser = argparse.ArgumentParser(description="Aggregate codebase into a single Markdown file.")
     parser.add_argument(
         '-p',
@@ -110,11 +113,14 @@ def main():
         help="Specify the path to the codebase directory (default: current directory)")
     parser.add_argument('-o', '--output', type=str, default='collated-code.md',
                         help="Specify output file (default: collated-code.md)")
+    parser.add_argument('-c', '--comments', type=str, choices=['on', 'off'], default='on',
+                        help="Include comments and docstrings (default: on)")
 
     args = parser.parse_args()
 
+    setup_logging()
     logging.info("Starting code collation for directory: %s", args.path)
-    collate_codebase(args.path, args.output)
+    collate_codebase(args.path, args.output, include_comments=(args.comments == 'on'))
     logging.info("Code collation completed.")
 
 
