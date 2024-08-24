@@ -1,16 +1,20 @@
 import os
+import sys
 import argparse
 from pathlib import Path
 import logging
 from fnmatch import fnmatch
+from pygments import lexers, token
+from pygments.util import ClassNotFound
 
 
 def setup_logging():
     """Set up logging configuration."""
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
 
 
 def is_binary_file(filepath):
@@ -33,7 +37,7 @@ def read_gitignore(path):
     try:
         with open(gitignore_path, 'r') as f:
             patterns = f.read().splitlines()
-        logging.info("Loaded .gitignore patterns from {gitignore_path}")
+        logging.info(f"Loaded .gitignore patterns from {gitignore_path}")
         return patterns
     except Exception as e:
         logging.error(f"Error reading .gitignore file {gitignore_path}: {e}")
@@ -65,7 +69,38 @@ def should_ignore(file_path, ignore_patterns):
     return False
 
 
-def collate_codebase(path, output_file):
+def process_file_content(content, file_path, include_comments):
+    """Process file content, optionally removing comments and docstrings."""
+    if include_comments:
+        return content
+
+    try:
+        lexer = lexers.get_lexer_for_filename(file_path)
+    except ClassNotFound:
+        logging.warning(f"No lexer found for {file_path}. Returning original content.")
+        return content
+
+    tokens = list(lexer.get_tokens(content))
+    processed_tokens = []
+    in_multiline_comment = False
+
+    for token_type, value in tokens:
+        if token_type in token.Comment or token_type in token.String.Doc:
+            if token_type == token.Comment.Multiline:
+                in_multiline_comment = not in_multiline_comment
+            continue
+        if not in_multiline_comment:
+            processed_tokens.append((token_type, value))
+
+    processed_content = ''.join(value for _, value in processed_tokens).strip()
+
+    # Remove any remaining single-line comments
+    processed_content = '\n'.join(line for line in processed_content.split('\n') if not line.strip().startswith('#'))
+
+    return processed_content
+
+
+def collate_codebase(path, output_file, include_comments=True):
     """Aggregate the codebase into a single Markdown file."""
     ignore_patterns = read_gitignore(path)
     try:
@@ -89,7 +124,8 @@ def collate_codebase(path, output_file):
                         try:
                             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                                 content = f.read()
-                                output.write(f"```\n{content}\n```\n\n")
+                                processed_content = process_file_content(content, file_path, include_comments)
+                                output.write(f"```\n{processed_content}\n```\n\n")
                         except Exception as e:
                             logging.error("Error reading file %s: %s", file_path, e)
                             output.write("**Note**: Error reading this file.\n\n")
@@ -100,7 +136,6 @@ def collate_codebase(path, output_file):
 
 def main():
     """Parse arguments and initiate codebase collation."""
-    setup_logging()
     parser = argparse.ArgumentParser(description="Aggregate codebase into a single Markdown file.")
     parser.add_argument(
         '-p',
@@ -110,11 +145,14 @@ def main():
         help="Specify the path to the codebase directory (default: current directory)")
     parser.add_argument('-o', '--output', type=str, default='collated-code.md',
                         help="Specify output file (default: collated-code.md)")
+    parser.add_argument('-c', '--comments', type=str, choices=['on', 'off'], default='on',
+                        help="Include comments and docstrings (default: on)")
 
     args = parser.parse_args()
 
+    setup_logging()
     logging.info("Starting code collation for directory: %s", args.path)
-    collate_codebase(args.path, args.output)
+    collate_codebase(args.path, args.output, include_comments=(args.comments == 'on'))
     logging.info("Code collation completed.")
 
 
