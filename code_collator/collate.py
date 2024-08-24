@@ -80,10 +80,18 @@ def process_file_content(content, file_path, include_comments):
         return content
 
     tokens = list(lexer.get_tokens(content))
-    processed_tokens = [
-        (token_type, value) for token_type, value in tokens
-        if token_type not in (token.Comment, token.Comment.Single, token.Comment.Multiline, token.String.Doc)
-    ]
+    processed_tokens = []
+    in_multiline_comment = False
+
+    for token_type, value in tokens:
+        if token_type in token.Comment:
+            if token_type == token.Comment.Multiline:
+                in_multiline_comment = not in_multiline_comment
+            continue
+        if token_type == token.String.Doc:
+            continue
+        if not in_multiline_comment:
+            processed_tokens.append((token_type, value))
 
     return ''.join(value for _, value in processed_tokens)
 
