@@ -97,10 +97,11 @@ def test_main(mock_file_system, caplog, capsys):
     assert "# This is a comment" in content
 
     # Test with comments excluded
-    with patch('sys.argv', ['collate', '-p', str(mock_file_system), '-o', 'output_without_comments.md', '-c', 'off']):
+    output_without_comments = mock_file_system / 'output_without_comments.md'
+    with patch('sys.argv', ['collate', '-p', str(mock_file_system), '-o', str(output_without_comments), '-c', 'off']):
         collate.main()
 
-    with open(mock_file_system / 'output_without_comments.md', 'r') as f:
+    with open(output_without_comments, 'r') as f:
         content = f.read()
     assert "# This is a comment" not in content
 
