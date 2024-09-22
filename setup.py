@@ -34,7 +34,7 @@ setup(
     packages=find_packages(include=['code_collator', 'code_collator.*']),
     python_requires=">=3.6, <4",
     install_requires=[
-        # Add any dependencies here
+        'pygments',
     ],
     entry_points={
         "console_scripts": [
