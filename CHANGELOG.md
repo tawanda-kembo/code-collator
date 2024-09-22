@@ -1,8 +1,8 @@
 # Changelog
 
-## v0.17.0
+## v0.18.0
 
-* Update CHANGELOG.md for v0.16.0
-* chore: adds back accidentally deleted requirements
-* Merge pull request #30 from tawanda-kembo/fix/adds-pygments-dependency
+* Update CHANGELOG.md for v0.17.0
+* fix: resolves dendency conflict
+* Merge pull request #31 from tawanda-kembo/fix/adds-pygments-dependency
 
