@@ -21,7 +21,7 @@ Have you ever needed to provide a comprehensive overview of your codebase for a 
 
 ## Demo Video
 
-[![Watch the demo video](https://img.youtube.com/vi/e8Ep_NOi_xU/0.jpg)](https://youtu.be/e8Ep_NOi_xU)
+[![Watch the demo video]([https://img.youtube.com/vi/e8Ep_NOi_xU/0.jpg](https://i.ytimg.com/vi/e8Ep_NOi_xU/maxresdefault.jpg))](https://youtu.be/e8Ep_NOi_xU)
 
 *Click the image above to watch a hands-on demo of how Code Collator works.*
 
